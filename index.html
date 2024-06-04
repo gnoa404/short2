@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom URL Shortener</title>
+</head>
+<body>
+    <h1>Custom URL Shortener</h1>
+    <form id="urlForm">
+        <label for="url">Enter URL:</label>
+        <input type="text" id="url" name="url" required>
+        <label for="customShortUrl">Enter Custom Short URL:</label>
+        <input type="text" id="customShortUrl" name="customShortUrl" required>
+        <button type="submit">Shorten</button>
+    </form>
+    <p id="shortUrl"></p>
+
+    <script>
+        document.getElementById('urlForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const originalUrl = document.getElementById('url').value;
+            const customShortUrl = document.getElementById('customShortUrl').value;
+
+            // Check if the custom short URL is already used
+            if (localStorage.getItem(customShortUrl)) {
+                alert('Custom short URL is already in use. Please choose another one.');
+            } else {
+                localStorage.setItem(customShortUrl, originalUrl);
+                const baseUrl = window.location.href;
+                document.getElementById('shortUrl').innerHTML = `Short URL: <a href="${baseUrl}${customShortUrl}" target="_blank">${baseUrl}${customShortUrl}</a>`;
+            }
+        });
+
+        window.addEventListener('load', function() {
+            const path = window.location.pathname.substring(1);
+            const originalUrl = localStorage.getItem(path);
+            if (originalUrl) {
+                window.location.href = originalUrl;
+            }
+        });
+    </script>
+</body>
+</html>
